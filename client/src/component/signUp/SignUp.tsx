@@ -1,17 +1,20 @@
 import React from "react";
 import { TitleInput } from "../upload/Create";
 import { styled } from "styled-components";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { ko } from "date-fns/esm/locale";
 export interface Props {
   handleStep: () => void;
 }
-interface SignUpInputs {
+export interface signUpInputs {
   id: string;
   password: string;
   name: string;
   email: string;
   nickName: string;
-  birth: Date;
+  birthDay: Date;
   phoneNumber: string;
 }
 const SignUp = (props: Props) => {
@@ -19,7 +22,8 @@ const SignUp = (props: Props) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignUpInputs>();
+    control,
+  } = useForm<signUpInputs>();
   const onSubmit = handleSubmit((data) => {
     console.log(data);
     props.handleStep();
@@ -132,7 +136,20 @@ const SignUp = (props: Props) => {
       <Error>{errors.nickName?.message}</Error>
       <SignUpRow>
         <Label>생년월일 :</Label>
-        <SignUpInput id="Name"></SignUpInput>
+        <Controller
+          control={control}
+          name="birthDay"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <DatePickerStyle
+              onChange={onChange}
+              onBlur={onBlur}
+              selected={value}
+              locale={ko}
+              showMonthDropdown
+              showYearDropdown
+            />
+          )}
+        ></Controller>
       </SignUpRow>
       <SignUpRow>
         <Label>핸드폰번호 :</Label>
@@ -156,6 +173,19 @@ const SignUpInput = styled(TitleInput)`
   width: 100%;
   min-height: 2rem;
   min-width: 20rem;
+`;
+const DatePickerStyle = styled(DatePicker)`
+  width: 100%;
+  min-height: 2rem;
+  min-width: 20rem;
+  font-size: 2rem;
+  padding: 1rem;
+  border: 0.2rem solid var(--green-color);
+  border-radius: 30px;
+  height: 4rem;
+  &:focus {
+    outline: none;
+  }
 `;
 const SignUpRow = styled.div`
   display: flex;
