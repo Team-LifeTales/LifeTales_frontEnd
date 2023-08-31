@@ -3,11 +3,11 @@ import { useForm } from "react-hook-form";
 import { styled } from "styled-components";
 import { TitleInput } from "./Create";
 const Update = () => {
-  interface FormValues {
+  interface formValues {
     title: string;
     content: string;
   }
-  const { register, handleSubmit } = useForm<FormValues>();
+  const { register, handleSubmit } = useForm<formValues>();
 
   const onSubmit = handleSubmit((data) => console.log(data));
 

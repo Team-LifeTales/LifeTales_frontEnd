@@ -1,6 +1,11 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-const tokenAuth = axios.create();
+const tokenAuth = axios.create({
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": "true",
+  },
+});
 
 tokenAuth.defaults.withCredentials = true;
 

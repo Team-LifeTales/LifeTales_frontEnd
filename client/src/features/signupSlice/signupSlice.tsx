@@ -1,38 +1,28 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import Cookies from "js-cookie";
-import tokenAuth from "../tokenAuth";
-interface loginSuccess {
+import { signUpInputs } from "../../component/signUp/SignUp";
+interface signupSuccess {
   id: string;
   pwd: number;
 }
 
-interface loginInfo {
-  id: string;
-  pwd: string;
-}
-
 interface initialStateType {
-  object: Array<loginSuccess>;
+  object: Array<signupSuccess>;
 }
 const initialState: initialStateType = {
   object: [],
 };
-export const loginAsync = createAsyncThunk<loginSuccess, loginInfo>(
-  "login",
+export const loginAsync = createAsyncThunk<signupSuccess, signUpInputs>(
+  "signupAsync",
   async (loginData, { rejectWithValue }) => {
     try {
-      const { data, headers } = await tokenAuth({
-        url: "http://3.39.37.48:8080/api/v1/users/basic/login",
-        method: "post",
-        data: {
-          id: `${loginData.id}`,
-          pwd: `${loginData.pwd}`,
+      const { data, headers } = await axios({
+        url: "http://3.39.37.48:8080/api/v1/users/basic/signUp/detail",
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
-      });
-      Cookies.set("Authorization", headers.Authorization, {
-        expires: new Date().getHours() + 1,
-        path: "/",
+        method: "post",
+        data: 1,
       });
       return data;
     } catch (e) {
@@ -45,12 +35,11 @@ export const loginAsync = createAsyncThunk<loginSuccess, loginInfo>(
     }
   }
 );
-export const loginSlice = createSlice({
-  name: "login",
+export const signupSlice = createSlice({
+  name: "signup",
   initialState,
   reducers: {
     logOut: (state) => {
-      Cookies.remove("Authorization");
       state.object = [];
     },
   },
@@ -63,5 +52,5 @@ export const loginSlice = createSlice({
     });
   },
 });
-export const { logOut } = loginSlice.actions;
-export default loginSlice.reducer;
+export const { logOut } = signupSlice.actions;
+export default signupSlice.reducer;
