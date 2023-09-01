@@ -1,18 +1,14 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-const tokenAuth = axios.create({
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Credentials": "true",
-  },
-});
+const tokenAuth = axios.create();
 
 tokenAuth.defaults.withCredentials = true;
 
 tokenAuth.interceptors.request.use(
   function (config) {
-    if (Cookies.get("Authorization")) {
-      config.headers.Authorization = `Bearer ${Cookies.get("Authorization")}`;
+    const token = Cookies.get("Authorization");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },

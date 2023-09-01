@@ -6,15 +6,13 @@ interface signupSuccess {
   pwd: number;
 }
 
-interface initialStateType {
-  object: Array<signupSuccess>;
-}
+interface initialStateType {}
 const initialState: initialStateType = {
-  object: [],
+  confirm: { id: "", email: "" },
 };
 export const loginAsync = createAsyncThunk<signupSuccess, signUpInputs>(
   "signupAsync",
-  async (loginData, { rejectWithValue }) => {
+  async (signupData, { rejectWithValue }) => {
     try {
       const { data, headers } = await axios({
         url: "http://3.39.37.48:8080/api/v1/users/basic/signUp/detail",
@@ -22,7 +20,14 @@ export const loginAsync = createAsyncThunk<signupSuccess, signUpInputs>(
           "Content-Type": "multipart/form-data",
         },
         method: "post",
-        data: 1,
+        data: {
+          id: signupData.id,
+          password: signupData.password,
+          name: signupData.name,
+          email: signupData.email,
+          nickName: signupData.nickName,
+          phoneNumber: signupData.phoneNumber,
+        },
       });
       return data;
     } catch (e) {

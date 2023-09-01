@@ -111,6 +111,7 @@ const SignUp = (props: Props) => {
             },
           })}
         ></SignUpInput>
+        <ConfirmButton>이메일 확인</ConfirmButton>
       </SignUpRow>
       <Error>{errors.email?.message}</Error>
       <SignUpRow>
@@ -162,7 +163,6 @@ const SignUp = (props: Props) => {
             },
           })}
         ></SignUpInput>
-        <ConfirmButton>핸드폰 확인</ConfirmButton>
       </SignUpRow>
       <Error>{errors.phoneNumber?.message}</Error>
       <SubmitButton>다음단계</SubmitButton>

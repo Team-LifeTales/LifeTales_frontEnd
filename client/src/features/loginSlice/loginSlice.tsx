@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
-import tokenAuth from "../tokenAuth";
+
 interface loginSuccess {
   id: string;
   pwd: number;
@@ -22,7 +22,7 @@ export const loginAsync = createAsyncThunk<loginSuccess, loginInfo>(
   "login",
   async (loginData, { rejectWithValue }) => {
     try {
-      const { data, headers } = await tokenAuth({
+      const { data } = await axios({
         url: "http://3.39.37.48:8080/api/v1/users/basic/login",
         method: "post",
         data: {
@@ -30,16 +30,18 @@ export const loginAsync = createAsyncThunk<loginSuccess, loginInfo>(
           pwd: `${loginData.pwd}`,
         },
       });
-      Cookies.set("Authorization", headers.Authorization, {
-        expires: new Date().getHours() + 1,
-        path: "/",
-      });
+      if (data.includes("Bearer")) {
+        Cookies.set("Authorization", data, {
+          expires: new Date().getHours() + 1,
+          path: "/",
+        });
+      }
       return data;
     } catch (e) {
       if (axios.isAxiosError(e)) {
         console.log(e);
         console.log(e.response);
-        throw e.response;
+        throw e.response?.status;
       }
       return rejectWithValue("No user found");
     }

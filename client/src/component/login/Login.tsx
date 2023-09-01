@@ -1,27 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "styled-components";
 import { TitleInput } from "../upload/Create";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { loginAsync } from "../../features/loginSlice/loginSlice";
-
+import Cookies from "js-cookie";
 interface LoginInputs {
   id: string;
   pwd: string;
 }
 const Login = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginInputs>();
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    dispatch(loginAsync(data));
+    dispatch(loginAsync(data)).then((response) => {
+      if (
+        response.type === "login/fulfilled" &&
+        response.payload !== "id is not exist"
+      ) {
+        alert("로그인 성공");
+        navigate("/Home");
+      } else {
+        alert("로그인 실패");
+      }
+    });
   });
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (Cookies.get("Authorization")) navigate("/Home");
+  }, []);
   return (
     <form onSubmit={onSubmit}>
       <LoginBox>
