@@ -1,34 +1,105 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { signUpInputs } from "../../component/signUp/SignUp";
+
 interface signupSuccess {
   id: string;
   pwd: number;
 }
-
-interface initialStateType {}
+interface signUpInputs {
+  id: string;
+  password: string;
+  name: string;
+  email: string;
+  nickName: string;
+  birthDay: string;
+  birthDayBefore: Date;
+  phoneNumber: string;
+}
+interface initialStateType {
+  first: {
+    id: { idContent: string | null; confirmed: boolean };
+    email: {
+      emailContent: string | null;
+      confirmed: boolean;
+      code: string | null;
+      loading: boolean;
+    };
+  };
+  second: null;
+  third: null;
+}
 const initialState: initialStateType = {
-  confirm: { id: "", email: "" },
+  first: {
+    id: { idContent: null, confirmed: false },
+    email: { emailContent: null, confirmed: false, code: null, loading: false },
+  },
+  second: null,
+  third: null,
 };
-export const loginAsync = createAsyncThunk<signupSuccess, signUpInputs>(
+export const emailCheckAsync = createAsyncThunk<string, string>(
+  "emailCheckAsync",
+  async (email, { rejectWithValue }) => {
+    try {
+      const { data } = await axios({
+        url: "http://3.39.37.48:8080/api/v1/users/basic/signUp/step1/checkEmail",
+        method: "post",
+        data: {
+          mail: email,
+        },
+      });
+      console.log(data);
+      return data;
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        console.log(e);
+        console.log(e.response);
+        throw e.response;
+      }
+      return rejectWithValue("No user found");
+    }
+  }
+);
+export const idCheckAsync = createAsyncThunk<boolean, string>(
+  "idCheckAsync",
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await axios({
+        url: "http://3.39.37.48:8080/api/v1/users/basic/signUp/step1/checkId",
+        method: "post",
+        data: {
+          id: id,
+        },
+      });
+
+      return data;
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        console.log(e);
+        console.log(e.response);
+        throw e.response;
+      }
+      return rejectWithValue("No user found");
+    }
+  }
+);
+export const signupAsync = createAsyncThunk<signupSuccess, signUpInputs>(
   "signupAsync",
   async (signupData, { rejectWithValue }) => {
     try {
-      const { data, headers } = await axios({
-        url: "http://3.39.37.48:8080/api/v1/users/basic/signUp/detail",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      const { data } = await axios({
+        url: "http://3.39.37.48:8080/api/v1/users/basic/signUp/step1",
         method: "post",
         data: {
           id: signupData.id,
-          password: signupData.password,
+          pwd: signupData.password,
           name: signupData.name,
           email: signupData.email,
           nickName: signupData.nickName,
+          birthDay: signupData.birthDay,
           phoneNumber: signupData.phoneNumber,
         },
       });
+      console.log(data);
       return data;
     } catch (e) {
       if (axios.isAxiosError(e)) {
@@ -44,18 +115,61 @@ export const signupSlice = createSlice({
   name: "signup",
   initialState,
   reducers: {
-    logOut: (state) => {
-      state.object = [];
+    updateIdContent: (state, action: PayloadAction<string>) => {
+      state.first.id.idContent = action.payload;
+    },
+    updateEmailContent: (state, action: PayloadAction<string>) => {
+      state.first.email.emailContent = action.payload;
+    },
+    deleteEmailCotnet: (state) => {
+      state.first.email.emailContent = null;
+    },
+    compareEmail: (state, action: PayloadAction<string>) => {
+      if (state.first.email.code === action.payload) {
+        state.first.email.confirmed = true;
+        alert("인증완료");
+      } else {
+        state.first.email.confirmed = false;
+        alert("코드가 올바르지 않습니다");
+      }
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(loginAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(signupAsync.fulfilled, (state, { payload }) => {
       console.log(payload);
     });
-    builder.addCase(loginAsync.rejected, (state, payload) => {
+    builder.addCase(idCheckAsync.pending, (state) => {
+      state.first.id.confirmed = false;
+    });
+    builder.addCase(idCheckAsync.fulfilled, (state, { payload }) => {
+      state.first.id.confirmed = payload;
+      console.log(state.first.id.confirmed);
+    });
+    builder.addCase(emailCheckAsync.pending, (state) => {
+      state.first.email.loading = true;
+      state.first.email.confirmed = false;
+      state.first.email.code = null;
+      console.log(state.first.email.loading);
+    });
+    builder.addCase(emailCheckAsync.fulfilled, (state, { payload }) => {
+      console.log(payload);
+      state.first.email.code = payload;
+      state.first.email.loading = false;
+      console.log(state.first.email.code);
+    });
+    builder.addCase(signupAsync.rejected, (state, payload) => {
+      console.log(payload);
+    });
+    builder.addCase(emailCheckAsync.rejected, (state, payload) => {
+      state.first.email.loading = false;
       console.log(payload);
     });
   },
 });
-export const { logOut } = signupSlice.actions;
+export const {
+  compareEmail,
+  updateIdContent,
+  updateEmailContent,
+  deleteEmailCotnet,
+} = signupSlice.actions;
 export default signupSlice.reducer;
