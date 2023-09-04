@@ -1,10 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-interface signupSuccess {
-  id: string;
-  pwd: number;
-}
 interface signUpInputs {
   id: string;
   password: string;
@@ -25,7 +21,7 @@ interface initialStateType {
       loading: boolean;
     };
   };
-  second: null;
+  second: { id: string | null };
   third: null;
 }
 const initialState: initialStateType = {
@@ -33,7 +29,7 @@ const initialState: initialStateType = {
     id: { idContent: null, confirmed: false },
     email: { emailContent: null, confirmed: false, code: null, loading: false },
   },
-  second: null,
+  second: { id: "testtest" },
   third: null,
 };
 export const emailCheckAsync = createAsyncThunk<string, string>(
@@ -61,7 +57,9 @@ export const emailCheckAsync = createAsyncThunk<string, string>(
 );
 export const idCheckAsync = createAsyncThunk<boolean, string>(
   "idCheckAsync",
-  async (id, { rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
+    const { signup } = getState() as { signup: initialStateType };
+    console.log(signup);
     try {
       const { data } = await axios({
         url: "http://3.39.37.48:8080/api/v1/users/basic/signUp/step1/checkId",
@@ -82,24 +80,48 @@ export const idCheckAsync = createAsyncThunk<boolean, string>(
     }
   }
 );
-export const signupAsync = createAsyncThunk<signupSuccess, signUpInputs>(
-  "signupAsync",
-  async (signupData, { rejectWithValue }) => {
+export const signupAsync = createAsyncThunk<
+  { data: string; id: string },
+  signUpInputs
+>("signupAsync", async (signupData, { rejectWithValue }) => {
+  try {
+    const { data } = await axios({
+      url: "http://3.39.37.48:8080/api/v1/users/basic/signUp/step1",
+      method: "post",
+      data: {
+        id: signupData.id,
+        pwd: signupData.password,
+        name: signupData.name,
+        email: signupData.email,
+        nickName: signupData.nickName,
+        birthDay: signupData.birthDay,
+        phoneNumber: signupData.phoneNumber,
+      },
+    });
+    console.log(data);
+    return { data: data, id: signupData.id };
+  } catch (e) {
+    if (axios.isAxiosError(e)) {
+      console.log(e);
+      console.log(e.response);
+      throw e.response;
+    }
+    return rejectWithValue("No user found");
+  }
+});
+export const signupSecondAsync = createAsyncThunk<string, FormData>(
+  "signupSecondAsync",
+  async (SecondData, { rejectWithValue }) => {
+    console.log(SecondData);
     try {
       const { data } = await axios({
-        url: "http://3.39.37.48:8080/api/v1/users/basic/signUp/step1",
-        method: "post",
-        data: {
-          id: signupData.id,
-          pwd: signupData.password,
-          name: signupData.name,
-          email: signupData.email,
-          nickName: signupData.nickName,
-          birthDay: signupData.birthDay,
-          phoneNumber: signupData.phoneNumber,
+        url: "http://3.39.37.48:8080/api/v1/users/basic/signUp/step2",
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
+        method: "post",
+        data: SecondData,
       });
-      console.log(data);
       return data;
     } catch (e) {
       if (axios.isAxiosError(e)) {
@@ -136,6 +158,10 @@ export const signupSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(signupAsync.fulfilled, (state, { payload }) => {
+      state.second.id = payload.id;
+      console.log(payload);
+    });
+    builder.addCase(signupAsync.rejected, (state, payload) => {
       console.log(payload);
     });
     builder.addCase(idCheckAsync.pending, (state) => {
@@ -157,11 +183,12 @@ export const signupSlice = createSlice({
       state.first.email.loading = false;
       console.log(state.first.email.code);
     });
-    builder.addCase(signupAsync.rejected, (state, payload) => {
-      console.log(payload);
-    });
+
     builder.addCase(emailCheckAsync.rejected, (state, payload) => {
       state.first.email.loading = false;
+      console.log(payload);
+    });
+    builder.addCase(signupSecondAsync.fulfilled, (state, { payload }) => {
       console.log(payload);
     });
   },

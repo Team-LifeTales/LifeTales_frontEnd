@@ -61,7 +61,7 @@ const SignUp = (props: Props) => {
     const birthDayForm = dateFormat(data.birthDayBefore);
     data.birthDay = birthDayForm;
     dispatch(signupAsync(data));
-    // props.handleStep();
+    props.handleStep();
   });
   const checkId = (id: string) => {
     const regex = /^.{6,30}$/;
@@ -262,6 +262,9 @@ const SignUp = (props: Props) => {
       </SignUpRow>
       <Error>{errors.phoneNumber?.message}</Error>
       <SubmitButton>다음단계</SubmitButton>
+      <SubmitButton type="button" onClick={() => props.handleStep()}>
+        테스트 다음단계
+      </SubmitButton>
     </form>
   );
 };

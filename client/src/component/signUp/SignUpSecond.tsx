@@ -3,6 +3,8 @@ import { styled } from "styled-components";
 import { useForm } from "react-hook-form";
 import preventEvent from "../../util/preventEvent";
 import { Props } from "./SignUp";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { signupSecondAsync } from "../../features/signupSlice/signupSlice";
 interface SignUpInputs {
   introduce: string;
 }
@@ -12,6 +14,8 @@ const SignUpSecond = (props: Props) => {
     handleSubmit,
     formState: { errors },
   } = useForm<SignUpInputs>();
+  const dispatch = useAppDispatch();
+  const id = useAppSelector((state) => state.signup.second.id);
   const [submitImage, setSubmitImage] = useState<File | null>(null);
   const [showImage, setShowImage] = useState("");
   const imageRef = useRef<HTMLInputElement>(null);
@@ -44,11 +48,26 @@ const SignUpSecond = (props: Props) => {
   const onSubmit = handleSubmit((data) => {
     console.log(data);
     console.log(submitImage);
-    props.handleStep();
+    const formData = new FormData();
+    if (submitImage) {
+      formData.append("profileIMG", submitImage);
+    }
+    formData.append("intro", data.introduce);
+    if (id) {
+      formData.append("id", id);
+    }
+    dispatch(signupSecondAsync(formData));
+    // props.handleStep();
+    for (const entry of formData.entries()) {
+      console.log(entry);
+    }
   });
   useEffect(() => {
     console.log(showImage);
   }, [showImage]);
+  useEffect(() => {
+    console.log(id);
+  }, [id]);
   return (
     <FormStyle onSubmit={onSubmit}>
       {showImage ? (
@@ -123,7 +142,7 @@ export const PreviewDelete = styled.button`
   position: absolute;
   width: 3rem;
   height: 2rem;
-  top: 0%;
+  top: 5%;
   right: 1rem;
   transform: translateY(-50%);
 `;
