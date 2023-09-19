@@ -58,9 +58,6 @@ const SignUpSecond = (props: Props) => {
     }
     dispatch(signupSecondAsync(formData));
     // props.handleStep();
-    for (const entry of formData.entries()) {
-      console.log(entry);
-    }
   });
   useEffect(() => {
     console.log(showImage);
@@ -106,6 +103,14 @@ const SignUpSecond = (props: Props) => {
       ></ContentInput>
       {errors.introduce?.message}
       <SubmitButton>다음</SubmitButton>
+      <SubmitButton
+        type="button"
+        onClick={() => {
+          props.handleStep();
+        }}
+      >
+        테스트 다음
+      </SubmitButton>
       <input
         type="file"
         id="images"

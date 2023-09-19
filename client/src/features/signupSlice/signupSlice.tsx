@@ -133,6 +133,30 @@ export const signupSecondAsync = createAsyncThunk<string, FormData>(
     }
   }
 );
+export const familySignupAsync = createAsyncThunk<object, FormData>(
+  "familySignupAsync",
+  async (familyData, { rejectWithValue }) => {
+    try {
+      const data = await axios({
+        url: "http://3.39.37.48:8080/api/v1/family/createFamily/detail",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        method: "post",
+        data: familyData,
+      });
+      console.log(data);
+      return data;
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        console.log(e);
+        console.log(e.response);
+        throw e.response;
+      }
+      return rejectWithValue("No user found");
+    }
+  }
+);
 export const signupSlice = createSlice({
   name: "signup",
   initialState,

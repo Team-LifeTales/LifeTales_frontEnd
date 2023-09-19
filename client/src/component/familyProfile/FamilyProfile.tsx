@@ -8,7 +8,24 @@ import {
   loadUserFeedAsync,
 } from "../../features/userProfileSlice/userProfileSlice";
 import PostGrid from "../post/PostGrid";
-const UserProfile = () => {
+import {
+  Back,
+  ButtonBox,
+  Card,
+  CreateButton,
+  Front,
+  ImageWithTitleBox,
+  UserImage,
+  UserInfo,
+  UserInfoBox,
+  UserIntro,
+  UserIntroInput,
+  UserName,
+  UserNameInput,
+  UserProfileBox,
+  UserTitle,
+} from "../userProfile/UserProfile";
+const FamilyProfile = () => {
   const dispatch = useAppDispatch();
   const status = useAppSelector((state) => state.userProfile.status);
 
@@ -35,23 +52,25 @@ const UserProfile = () => {
               <Back></Back>
             </Card>
           </UserImage>
-          <UserTitle>김해김씨</UserTitle>
+          <UserTitle></UserTitle>
         </ImageWithTitleBox>
         <UserInfoBox>
           {status === "edit" ? (
             <UserNameInput value="홍길동" readOnly />
           ) : (
-            <UserName>홍길동</UserName>
+            <UserName>김해김씨</UserName>
           )}
-
-          <UserInfo>게시글 0</UserInfo>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <UserInfo>게시글 0</UserInfo>
+            <FamilyCount>멤버수 0</FamilyCount>
+          </div>
           {status === "edit" ? (
             <UserIntroInput
               value="에습하의 윈터입니다 반가워요 ^^"
               readOnly
             ></UserIntroInput>
           ) : (
-            <UserIntro>에습하의 윈터입니다 반가워요 ^^</UserIntro>
+            <UserIntro>김해김씨가족입니다 어서오세요</UserIntro>
           )}
         </UserInfoBox>
         <ButtonBox>
@@ -85,79 +104,6 @@ const UserProfile = () => {
     </>
   );
 };
-export const UserProfileBox = styled.div`
-  display: flex;
-  margin: 4rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid;
-`;
-export const ImageWithTitleBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  item-align: center;
-  text-align: center;
-  margin-right: 2rem;
-`;
-export const UserImage = styled.div`
-  width: 15rem;
-  height: 15rem;
-  overflow: hidden;
-`;
-export const Card = styled.div`
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transition: 0.7s;
-  border-radius: 50%;
-  transform-style: preserve-3d;
-  &:hover {
-    transform: rotateY(180deg);
-  }
-`;
-export const CardOption = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  backface-visibility: hidden;
-`;
-export const Front = styled(CardOption)`
-  background: green;
-`;
-export const Back = styled(CardOption)`
-  background: royalblue;
-  transform: rotateY(180deg);
-`;
-export const UserTitle = styled.div`
-  height: 1rem;
-`;
-export const UserInfoBox = styled.div`
-  height: 10rem;
-`;
-export const UserName = styled.div`
-  line-height: 3rem;
-`;
-export const UserNameInput = styled.input`
-  line-height: 3rem;
-`;
-export const UserInfo = styled.div`
-  line-height: 3rem;
-  width: 5rem;
-`;
-export const UserIntro = styled.div`
-  margin-top: 2rem;
-  width: 20rem;
-`;
-export const UserIntroInput = styled.input`
-  margin-top: 2rem;
-  width: 20rem;
-`;
-export const ButtonBox = styled.div`
-  margin-left: 20rem;
-`;
-export const CreateButton = styled.button`
-  width: 5rem;
-  height: 2rem;
-`;
-export default UserProfile;
+
+const FamilyCount = styled.div``;
+export default FamilyProfile;

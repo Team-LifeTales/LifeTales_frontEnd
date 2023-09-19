@@ -6,10 +6,12 @@ import JoinFamily from "./JoinFamily";
 
 const SignUpThird = () => {
   const [checked, setChecked] = useState(false);
+
   const handleChange = (nextChecked: boolean) => {
     setChecked(nextChecked);
     console.log(nextChecked);
   };
+
   return (
     <>
       <SwitchBox>

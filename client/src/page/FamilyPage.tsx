@@ -1,24 +1,23 @@
 import React from "react";
 import LeftBar from "../component/leftBar/LeftBar";
-import UserProfile from "../component/userProfile/UserProfile";
 import { styled } from "styled-components";
-const UserPage = () => {
+import FamilyProfile from "../component/familyProfile/FamilyProfile";
+const FamilyPage = () => {
   return (
     <>
       <LeftBar />
-      <UserBox>
-        <UserProfile></UserProfile>
-      </UserBox>
+      <FamilyBox>
+        <FamilyProfile></FamilyProfile>
+      </FamilyBox>
     </>
   );
 };
-const UserBox = styled.div`
+const FamilyBox = styled.div`
   margin-left: 15rem;
   display: grid;
   justify-content: center;
-
   @media screen and (max-width: 1100px) {
     margin-left: 0;
   }
 `;
-export default UserPage;
+export default FamilyPage;

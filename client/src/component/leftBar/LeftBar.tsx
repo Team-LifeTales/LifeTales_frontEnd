@@ -4,7 +4,7 @@ const navContentList = [
   { name: "홈", image: "/img/home.png", url: "/Home" },
   { name: "검색", image: "/img/search.png", url: "/Search" },
   { name: "프로필", image: "/img/profile.png", url: "/User" },
-  { name: "가족", image: "/img/family.png", url: "" },
+  { name: "가족", image: "/img/family.png", url: "/Family" },
   { name: "채팅", image: "/img/chat.png", url: "/ChatRoom" },
   { name: "A.I가이드", image: "/img/AI.png", url: "" },
   { name: "가족일기", image: "/img/diary.png", url: "" },
@@ -83,7 +83,7 @@ const UserInfo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 6rem;
+
   line-height: 1rem;
 `;
 export const UserImg = styled.div`

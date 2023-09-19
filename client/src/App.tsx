@@ -7,6 +7,7 @@ import SearchPage from "./page/SearchPage";
 import ChatRoomPage from "./page/ChatRoomPage";
 import LoginPage from "./page/LoginPage";
 import SignUpPage from "./page/SignUpPage";
+import FamilyPage from "./page/FamilyPage";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -20,6 +21,10 @@ const App = () => {
     {
       path: "/User",
       element: <UserPage />,
+    },
+    {
+      path: "/Family",
+      element: <FamilyPage />,
     },
     {
       path: "/Create",
