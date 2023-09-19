@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TitleInput } from "../upload/Create";
 import { styled } from "styled-components";
 import { Controller, useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/esm/locale";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  emailCheckAsync,
+  idCheckAsync,
+  signupAsync,
+  updateEmailContent,
+  updateIdContent,
+} from "../../features/signupSlice/signupSlice";
+import SignUpEmailModal from "./SignUpEmailModal";
+import { dateFormat } from "../../util/dateFormat";
 export interface Props {
   handleStep: () => void;
 }
@@ -14,20 +24,77 @@ export interface signUpInputs {
   name: string;
   email: string;
   nickName: string;
-  birthDay: Date;
+  birthDayBefore: Date;
+  birthDay: string;
   phoneNumber: string;
 }
 const SignUp = (props: Props) => {
   const {
     register,
+    getValues,
     handleSubmit,
     formState: { errors },
     control,
   } = useForm<signUpInputs>();
+  const confirmedId = useAppSelector(
+    (state) => state.signup.first.id.idContent
+  );
+  const confirmedEmail = useAppSelector(
+    (state) => state.signup.first.email.emailContent
+  );
+  const confirmedIdBoolean = useAppSelector(
+    (state) => state.signup.first.id.confirmed
+  );
+  const confirmedEmailBoolean = useAppSelector(
+    (state) => state.signup.first.email.confirmed
+  );
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const offModal = () => {
+    setIsOpen(false);
+  };
+  const onModal = () => {
+    setIsOpen(true);
+  };
+  const dispatch = useAppDispatch();
   const onSubmit = handleSubmit((data) => {
     console.log(data);
+    const birthDayForm = dateFormat(data.birthDayBefore);
+    data.birthDay = birthDayForm;
+    dispatch(signupAsync(data));
     props.handleStep();
   });
+  const checkId = (id: string) => {
+    const regex = /^.{6,30}$/;
+    if (regex.test(id)) {
+      dispatch(idCheckAsync(id)).then(({ payload }) => {
+        if (payload === true) {
+          dispatch(updateIdContent(id));
+          alert("아이디 사용가능합니다!");
+        } else {
+          alert("사용불가능한 아이디입니다");
+        }
+      });
+    } else {
+      alert("6글자이상 30글자이하입니다");
+    }
+  };
+  const checkEmail = (email: string) => {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (regex.test(email)) {
+      onModal();
+      dispatch(emailCheckAsync(email)).then(() => {
+        dispatch(updateEmailContent(email));
+      });
+    } else {
+      alert("이메일형식을 맞춰주세요");
+    }
+  };
+  useEffect(() => {}, [
+    confirmedIdBoolean,
+    confirmedEmail,
+    confirmedId,
+    confirmedEmailBoolean,
+  ]);
   return (
     <form onSubmit={onSubmit}>
       <SignUpRow>
@@ -43,11 +110,24 @@ const SignUp = (props: Props) => {
               value: 30,
               message: "최대글자수를 넘었습니다.",
             },
+            validate: (value) =>
+              value == confirmedId ||
+              `${value} ${confirmedId}아이디 확인을 해주세요!`,
           })}
         ></SignUpInput>
-        <ConfirmButton>아이디 확인</ConfirmButton>
+        <ConfirmButton
+          type="button"
+          onClick={() => {
+            const values = getValues();
+            console.log(values.id);
+            checkId(values.id);
+          }}
+        >
+          아이디 확인
+        </ConfirmButton>
       </SignUpRow>
       <Error>{errors.id?.message}</Error>
+
       <SignUpRow>
         <Label>비밀번호 :</Label>
         <SignUpInput
@@ -72,6 +152,7 @@ const SignUp = (props: Props) => {
         ></SignUpInput>
       </SignUpRow>
       <Error>{errors.password?.message}</Error>
+
       <SignUpRow>
         <Label>이름 :</Label>
         <SignUpInput
@@ -109,9 +190,23 @@ const SignUp = (props: Props) => {
               value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
               message: "이메일 형식을 맞춰주세요.",
             },
+            validate: (value) =>
+              value === confirmedEmail || "이메일 인증을 해주세요!",
           })}
         ></SignUpInput>
-        <ConfirmButton>이메일 확인</ConfirmButton>
+        <ConfirmButton
+          type="button"
+          onClick={() => {
+            const values = getValues();
+            checkEmail(values.email);
+          }}
+        >
+          이메일 인증
+        </ConfirmButton>
+        <SignUpEmailModal
+          modalIsOpen={modalIsOpen}
+          offModal={offModal}
+        ></SignUpEmailModal>
       </SignUpRow>
       <Error>{errors.email?.message}</Error>
       <SignUpRow>
@@ -139,9 +234,10 @@ const SignUp = (props: Props) => {
         <Label>생년월일 :</Label>
         <Controller
           control={control}
-          name="birthDay"
+          name="birthDayBefore"
           render={({ field: { onChange, onBlur, value } }) => (
             <DatePickerStyle
+              dateFormat="yyyy-MM-dd"
               onChange={onChange}
               onBlur={onBlur}
               selected={value}
@@ -166,6 +262,9 @@ const SignUp = (props: Props) => {
       </SignUpRow>
       <Error>{errors.phoneNumber?.message}</Error>
       <SubmitButton>다음단계</SubmitButton>
+      <SubmitButton type="button" onClick={() => props.handleStep()}>
+        테스트 다음단계
+      </SubmitButton>
     </form>
   );
 };

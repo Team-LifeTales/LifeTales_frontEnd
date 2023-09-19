@@ -28,7 +28,6 @@ const PostDetail = (props: Props) => {
             <HeartAction></HeartAction>
           </UserInfo>
           <TitleWithDate>
-            <Title>오늘 꽃사진</Title>
             <Date>2023-08-10</Date>
           </TitleWithDate>
           <Content>
@@ -77,9 +76,7 @@ const TitleWithDate = styled.div`
   justify-content: end;
   margin-bottom: 1rem;
 `;
-const Title = styled.div`
-  font-size: 1.5rem;
-`;
+
 const Date = styled.div`
   font-size: 1rem;
   margin-right: 1rem;

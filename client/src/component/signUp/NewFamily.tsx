@@ -11,13 +11,17 @@ import {
 } from "./SignUpSecond";
 import preventEvent from "../../util/preventEvent";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { familySignupAsync } from "../../features/signupSlice/signupSlice";
 interface SignUpInputs {
-  name: string;
+  nickName: string;
   introduce: string;
   question: string;
   answer: string;
 }
 const NewFamily = () => {
+  const id = useAppSelector((state) => state.signup.first.id.idContent);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const {
     register,
@@ -55,14 +59,23 @@ const NewFamily = () => {
   };
   const onSubmit = handleSubmit((data) => {
     console.log(data);
-    console.log(submitImage);
-    navigate("/");
+    const formData = new FormData();
+    if (submitImage) {
+      formData.append("profileIMG", submitImage);
+    }
+    formData.append("introduce", data.introduce);
+    formData.append("nickName", data.nickName);
+    if (id) {
+      formData.append("id", id);
+    }
+    dispatch(familySignupAsync(formData));
+    // navigate("/");
   });
   return (
     <FormStyle onSubmit={onSubmit}>
       <FamilyInput
         placeholder="가문이름"
-        {...register("name", {
+        {...register("nickName", {
           required: "가문이름을 채워주세요.",
           minLength: {
             value: 2,
@@ -74,7 +87,7 @@ const NewFamily = () => {
           },
         })}
       ></FamilyInput>
-      <FamilyError>{errors.name?.message}</FamilyError>
+      <FamilyError>{errors.nickName?.message}</FamilyError>
       {showImage ? (
         <PreviewImageBox>
           <FamilyPreviewImage src={showImage}></FamilyPreviewImage>

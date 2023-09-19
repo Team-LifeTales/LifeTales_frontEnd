@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   SearchIcon,
   SearchInput,
@@ -11,18 +11,50 @@ import { TitleInput } from "../upload/Create";
 
 const JoinFamily = () => {
   const [searchContent, setSearchContent] = useState<string>("");
+  const socket = useRef<WebSocket>();
+
+  useEffect(() => {
+    const _socket = new WebSocket(
+      `ws://3.39.37.48:8080/websocket-FamilySearch`
+    );
+    socket.current = _socket;
+    _socket.onopen = (event) => {
+      console.log(event);
+      console.log("열림");
+    };
+    console.log(socket.current);
+    _socket.onmessage = (event) => {
+      console.log(event.data);
+    };
+    _socket.onerror = (event) => {
+      console.log(event);
+    };
+    // _socket.onclose = (event) => {
+    //   console.log(event);
+    //   alert("서버연결 실패");
+    // };
+    return () => {
+      _socket.close();
+    };
+  }, []);
   const handleContent = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchContent(e.target.value);
+    if (socket.current) {
+      socket.current.onopen = (event) => {
+        console.log(event);
+        socket.current?.send(searchContent);
+      };
+    }
   };
   return (
     <>
       <SearchBox>
-        <SearchInput
+        <SearchFamilyInput
           value={searchContent}
           onChange={(e) => {
             handleContent(e);
           }}
-        ></SearchInput>
+        ></SearchFamilyInput>
         <SearchIcon src="/img/search.png" draggable="false"></SearchIcon>
         <XIcon
           onClick={() => {
@@ -53,6 +85,9 @@ const SearchBox = styled(SearchInputBox)`
   height: 4rem;
   justify-content: center;
   align-items: center;
+`;
+const SearchFamilyInput = styled(SearchInput)`
+  width: 100%;
 `;
 const ResultBox = styled.div`
   width: 60%;

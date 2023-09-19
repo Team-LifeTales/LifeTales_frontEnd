@@ -12,6 +12,24 @@ const Result = () => {
       <ResultContent>
         <p>가문3</p>
       </ResultContent>
+      <ResultContent>
+        <p>가문3</p>
+      </ResultContent>
+      <ResultContent>
+        <p>가문3</p>
+      </ResultContent>
+      <ResultContent>
+        <p>가문3</p>
+      </ResultContent>
+      <ResultContent>
+        <p>가문3</p>
+      </ResultContent>
+      <ResultContent>
+        <p>가문3</p>
+      </ResultContent>
+      <ResultContent>
+        <p>가문3</p>
+      </ResultContent>
     </>
   );
 };
