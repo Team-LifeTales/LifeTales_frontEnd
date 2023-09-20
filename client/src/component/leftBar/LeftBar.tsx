@@ -32,6 +32,7 @@ const LeftBar = () => {
           })}
         </ul>
       </Navigation>
+
       <UserInfo>
         <UserImg>
           <UserImgContent src="/img/AI.png"></UserImgContent>
@@ -50,6 +51,9 @@ const LeftBarBox = styled.div`
   height: 100vh;
   background-color: var(--background-color));
   position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
   @media screen and (max-width: 1100px) {
     display: none;
   }
@@ -58,7 +62,6 @@ const LogoBox = styled.div`
   width: 100%;
   height: 100px;
   border: 1px solid;
-  display: flex;
   justify-content: center;
   align-items: center;
 `;
@@ -83,7 +86,6 @@ const UserInfo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
   line-height: 1rem;
 `;
 export const UserImg = styled.div`

@@ -1,12 +1,10 @@
 import React from "react";
-import LeftBar from "../component/leftBar/LeftBar";
 import { styled } from "styled-components";
 import Create from "../component/upload/Create";
 
 const CreatePage = () => {
   return (
     <>
-      <LeftBar />
       <CreateBox>
         <Create />
       </CreateBox>

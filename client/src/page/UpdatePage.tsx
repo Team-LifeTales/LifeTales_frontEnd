@@ -1,11 +1,9 @@
 import React from "react";
 import { styled } from "styled-components";
-import LeftBar from "../component/leftBar/LeftBar";
 import Update from "../component/upload/Update";
 const UpdatePage = () => {
   return (
     <>
-      <LeftBar />
       <UpdateBox>
         <Update />
       </UpdateBox>
