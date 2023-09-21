@@ -215,6 +215,12 @@ export const signupSlice = createSlice({
     builder.addCase(signupSecondAsync.fulfilled, (state, { payload }) => {
       console.log(payload);
     });
+    builder.addCase(familySignupAsync.fulfilled, (state, { payload }) => {
+      console.log(payload);
+    });
+    builder.addCase(familySignupAsync.rejected, (state, payload) => {
+      console.log(payload);
+    });
   },
 });
 export const {

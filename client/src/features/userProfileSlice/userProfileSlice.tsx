@@ -39,7 +39,14 @@ export const userSlice = createSlice({
       state.status = "";
     },
   },
-  extraReducers: () => {},
+  extraReducers: (builder) => {
+    builder.addCase(loadUserFeedAsync.fulfilled, (state, { payload }) => {
+      console.log(payload);
+    });
+    builder.addCase(loadUserFeedAsync.rejected, (state, payload) => {
+      console.log(payload);
+    });
+  },
 });
 
 export const { edit, editDone } = userSlice.actions;
