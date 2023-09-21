@@ -8,8 +8,48 @@ import ChatRoomPage from "./page/ChatRoomPage";
 import LoginPage from "./page/LoginPage";
 import SignUpPage from "./page/SignUpPage";
 import FamilyPage from "./page/FamilyPage";
+import LeftBar from "./component/leftBar/LeftBar";
+import PrivateRouter from "./util/PrivateRouter";
 const App = () => {
   const router = createBrowserRouter([
+    {
+      element: (
+        <>
+          <LeftBar />
+          <PrivateRouter />
+        </>
+      ),
+      children: [
+        {
+          path: "/Home",
+          element: <HomePage />,
+        },
+        {
+          path: "/User",
+          element: <UserPage />,
+        },
+        {
+          path: "/Family",
+          element: <FamilyPage />,
+        },
+        {
+          path: "/Create",
+          element: <CreatePage />,
+        },
+        {
+          path: "/Update",
+          element: <UpdatePage />,
+        },
+        {
+          path: "/Search",
+          element: <SearchPage />,
+        },
+        {
+          path: "/ChatRoom",
+          element: <ChatRoomPage />,
+        },
+      ],
+    },
     {
       path: "/",
       element: <LoginPage />,
@@ -17,34 +57,6 @@ const App = () => {
     {
       path: "/SignUp",
       element: <SignUpPage />,
-    },
-    {
-      path: "/User",
-      element: <UserPage />,
-    },
-    {
-      path: "/Family",
-      element: <FamilyPage />,
-    },
-    {
-      path: "/Create",
-      element: <CreatePage />,
-    },
-    {
-      path: "/Update",
-      element: <UpdatePage />,
-    },
-    {
-      path: "/Search",
-      element: <SearchPage />,
-    },
-    {
-      path: "/ChatRoom",
-      element: <ChatRoomPage />,
-    },
-    {
-      path: "/Home",
-      element: <HomePage />,
     },
   ]);
   return (

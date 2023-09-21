@@ -1,11 +1,9 @@
 import React from "react";
-import LeftBar from "../component/leftBar/LeftBar";
 import UserProfile from "../component/userProfile/UserProfile";
 import { styled } from "styled-components";
 const UserPage = () => {
   return (
     <>
-      <LeftBar />
       <UserBox>
         <UserProfile></UserProfile>
       </UserBox>

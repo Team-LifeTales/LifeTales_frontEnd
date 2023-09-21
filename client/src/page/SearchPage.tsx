@@ -1,12 +1,10 @@
 import React from "react";
-import LeftBar from "../component/leftBar/LeftBar";
 import { styled } from "styled-components";
 import Search from "../component/search/Search";
 
 const SearchPage = () => {
   return (
     <>
-      <LeftBar></LeftBar>
       <SearchBox>
         <Search></Search>
       </SearchBox>

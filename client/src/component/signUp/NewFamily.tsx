@@ -16,11 +16,11 @@ import { familySignupAsync } from "../../features/signupSlice/signupSlice";
 interface SignUpInputs {
   nickName: string;
   introduce: string;
-  question: string;
-  answer: string;
+  familySignInQuestion: string;
+  familySignInAnswer: string;
 }
 const NewFamily = () => {
-  const id = useAppSelector((state) => state.signup.first.id.idContent);
+  const userId = useAppSelector((state) => state.signup.first.id.idContent);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const {
@@ -65,8 +65,10 @@ const NewFamily = () => {
     }
     formData.append("introduce", data.introduce);
     formData.append("nickName", data.nickName);
-    if (id) {
-      formData.append("id", id);
+    formData.append("familySignInQuestion", data.familySignInQuestion);
+    formData.append("familySignInAnswer", data.familySignInAnswer);
+    if (userId) {
+      formData.append("userId", userId);
     }
     dispatch(familySignupAsync(formData));
     // navigate("/");
@@ -125,7 +127,7 @@ const NewFamily = () => {
       <FamilyError>{errors.introduce?.message}</FamilyError>
       <FamilyInput
         placeholder="가문질문"
-        {...register("question", {
+        {...register("familySignInQuestion", {
           required: "질문을 채워주세요.",
           maxLength: {
             value: 30,
@@ -133,10 +135,10 @@ const NewFamily = () => {
           },
         })}
       ></FamilyInput>
-      <FamilyError>{errors.question?.message}</FamilyError>
+      <FamilyError>{errors.familySignInQuestion?.message}</FamilyError>
       <FamilyInput
         placeholder="가문답변"
-        {...register("answer", {
+        {...register("familySignInAnswer", {
           required: "답변을 채워주세요.",
           maxLength: {
             value: 20,
@@ -144,7 +146,7 @@ const NewFamily = () => {
           },
         })}
       ></FamilyInput>
-      <FamilyError>{errors.answer?.message}</FamilyError>
+      <FamilyError>{errors.familySignInAnswer?.message}</FamilyError>
       <FamilySubmitButton type="submit">완료</FamilySubmitButton>
       <input
         type="file"

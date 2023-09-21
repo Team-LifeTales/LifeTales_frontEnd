@@ -1,11 +1,9 @@
 import React from "react";
-import LeftBar from "../component/leftBar/LeftBar";
 import { styled } from "styled-components";
 import Chat from "../component/chatRoom/Chat";
 const ChatRoomPage = () => {
   return (
     <>
-      <LeftBar />
       <ChatRoomBox>
         <Chat></Chat>
       </ChatRoomBox>
