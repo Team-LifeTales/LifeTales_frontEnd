@@ -40,7 +40,7 @@ export const familySlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(loadFamilyFeedAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(loadFamilyFeedAsync.fulfilled, (state, payload) => {
       console.log(payload);
     });
     builder.addCase(loadFamilyFeedAsync.rejected, (state, payload) => {

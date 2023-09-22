@@ -40,7 +40,7 @@ export const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(loadUserFeedAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(loadUserFeedAsync.fulfilled, (state, payload) => {
       console.log(payload);
     });
     builder.addCase(loadUserFeedAsync.rejected, (state, payload) => {
