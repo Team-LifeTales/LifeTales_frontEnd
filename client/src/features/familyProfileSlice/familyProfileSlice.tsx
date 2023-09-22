@@ -8,12 +8,12 @@ interface initialStateType {
 const initialState: initialStateType = {
   status: "",
 };
-export const loadUserFeedAsync = createAsyncThunk<object>(
-  "loadUserFeed",
+export const loadFamilyFeedAsync = createAsyncThunk<object>(
+  "loadFamilyFeed",
   async (_, { rejectWithValue }) => {
     try {
       const data = await tokenAuth({
-        url: "http://3.39.37.48:8080/api/v1/feed/feedDataUser/",
+        url: "http://3.39.37.48:8080/api/v1/feed/feedDataFamily/",
         method: "get",
       });
       console.log(data);
@@ -28,26 +28,26 @@ export const loadUserFeedAsync = createAsyncThunk<object>(
     }
   }
 );
-export const userSlice = createSlice({
-  name: "user",
+export const familySlice = createSlice({
+  name: "family",
   initialState,
   reducers: {
-    userProfileEdit: (state) => {
+    familyProfileEdit: (state) => {
       state.status = "edit";
     },
-    userProfileEditDone: (state) => {
+    familyProfileEditDone: (state) => {
       state.status = "";
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(loadUserFeedAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(loadFamilyFeedAsync.fulfilled, (state, { payload }) => {
       console.log(payload);
     });
-    builder.addCase(loadUserFeedAsync.rejected, (state, payload) => {
+    builder.addCase(loadFamilyFeedAsync.rejected, (state, payload) => {
       console.log(payload);
     });
   },
 });
 
-export const { userProfileEdit, userProfileEditDone } = userSlice.actions;
-export default userSlice.reducer;
+export const { familyProfileEdit, familyProfileEditDone } = familySlice.actions;
+export default familySlice.reducer;
