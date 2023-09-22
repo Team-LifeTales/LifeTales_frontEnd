@@ -2,11 +2,6 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import {
-  edit,
-  editDone,
-  loadUserFeedAsync,
-} from "../../features/userProfileSlice/userProfileSlice";
 import PostGrid from "../post/PostGrid";
 import {
   Back,
@@ -25,9 +20,14 @@ import {
   UserProfileBox,
   UserTitle,
 } from "../userProfile/UserProfile";
+import {
+  familyProfileEdit,
+  familyProfileEditDone,
+  loadFamilyFeedAsync,
+} from "../../features/familyProfileSlice/familyProfileSlice";
 const FamilyProfile = () => {
   const dispatch = useAppDispatch();
-  const status = useAppSelector((state) => state.userProfile.status);
+  const status = useAppSelector((state) => state.familyProfile.status);
 
   const navigate = useNavigate();
 
@@ -35,12 +35,12 @@ const FamilyProfile = () => {
     // mount 시점, deps update 시점에 실행할 작업 (componentDidMount)
     return () => {
       //unmount 시점, deps update 직전에 실행할 작업 (componentWillUnmount)
-      dispatch(editDone());
+      dispatch(familyProfileEditDone());
     };
   }, []);
   useEffect(() => {}, [status]);
   useEffect(() => {
-    dispatch(loadUserFeedAsync());
+    dispatch(loadFamilyFeedAsync());
   }, []);
   return (
     <>
@@ -84,7 +84,7 @@ const FamilyProfile = () => {
           {status === "edit" ? (
             <CreateButton
               onClick={() => {
-                dispatch(editDone());
+                dispatch(familyProfileEditDone());
               }}
             >
               적용하기
@@ -92,7 +92,7 @@ const FamilyProfile = () => {
           ) : (
             <CreateButton
               onClick={() => {
-                dispatch(edit());
+                dispatch(familyProfileEdit());
               }}
             >
               편집하기

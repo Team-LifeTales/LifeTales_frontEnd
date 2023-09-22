@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
-  edit,
-  editDone,
+  userProfileEdit,
+  userProfileEditDone,
   loadUserFeedAsync,
 } from "../../features/userProfileSlice/userProfileSlice";
 import PostGrid from "../post/PostGrid";
@@ -18,7 +18,7 @@ const UserProfile = () => {
     // mount 시점, deps update 시점에 실행할 작업 (componentDidMount)
     return () => {
       //unmount 시점, deps update 직전에 실행할 작업 (componentWillUnmount)
-      dispatch(editDone());
+      dispatch(userProfileEditDone());
     };
   }, []);
   useEffect(() => {}, [status]);
@@ -65,7 +65,7 @@ const UserProfile = () => {
           {status === "edit" ? (
             <CreateButton
               onClick={() => {
-                dispatch(editDone());
+                dispatch(userProfileEditDone());
               }}
             >
               적용하기
@@ -73,7 +73,7 @@ const UserProfile = () => {
           ) : (
             <CreateButton
               onClick={() => {
-                dispatch(edit());
+                dispatch(userProfileEdit());
               }}
             >
               편집하기
