@@ -12,12 +12,13 @@ export const loadFamilyFeedAsync = createAsyncThunk<object>(
   "loadFamilyFeed",
   async (_, { rejectWithValue }) => {
     try {
-      const data = await tokenAuth({
+      const { data, status } = await tokenAuth({
         url: "http://3.39.37.48:8080/api/v1/feed/feedDataFamily/",
         method: "get",
       });
       console.log(data);
-      return data;
+      console.log(status);
+      return { data: data, status: status };
     } catch (e) {
       if (axios.isAxiosError(e)) {
         console.log(e);
